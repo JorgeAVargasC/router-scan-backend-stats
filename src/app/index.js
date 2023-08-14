@@ -3,6 +3,10 @@ const { MongoClient, ServerApiVersion } = require('mongodb')
 const dotenv = require('dotenv')
 dotenv.config()
 
+const dns = require('dns')
+dns.resolve4('localhost', console.log)
+dns.resolve6('localhost', console.log)
+
 // Environment variables
 const {
   PORT,
@@ -72,7 +76,7 @@ app.get('/', async (req, res) => {
   try {
     await client.connect()
     const dbResults = await getDBResults({ page: 1, limit: 2 })
-    res.send('Hello World! Data from MongoDB: ' + JSON.stringify(dbResults))
+    res.send(JSON.stringify(dbResults))
   } catch (error) {
     console.error(error)
     res.status(500).send('An error occurred.')
