@@ -17,7 +17,7 @@ const {
   MONGO_COLLECTION
 } = process.env
 
-const uri = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}?retryWrites=true&w=majority`
+const uri = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}?retryWrites=true`
 
 const app = express()
 const port = PORT
@@ -59,7 +59,8 @@ const getDBResults = async ({ page, limit }) => {
     const options = {
       limit: limit || 10,
       skip: page ? (page - 1) * limit : 0,
-      sort: { _id: -1 }
+      sort: { _id: -1 }, 
+      projection: { _id: 0, ip: 1 }
     }
 
     const results = await allScans.find({}, options).toArray()
@@ -86,5 +87,8 @@ app.get('/', async (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(
+    '\x1b[36m%s\x1b[0m',
+    `[API] Server is listening on http://localhost:${port}`
+  )
 })
